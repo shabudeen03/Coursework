@@ -1,0 +1,204 @@
+
+Program Description:
+	I filter for command line arguments in target, and scanning_ports list
+	Then, I perform syn-scan looking for either ack or synack packets for each port, if they are received, then I store such ports to open_ports list
+	Then, for each port, I perform the probes to determine which type of service is running on the open port. I consider it from stricter cases to generic cases, so I do banner message first since this is very specific and easy to determine, then http since the server would or not reply with approporiately formatted http response, and then generic, with TLS version before TCP since TLS runs on top of TCP. 	
+	Whichever of these probes returns (run iteratively), I classify it as that given service. 
+
+Design Decisions
+1. I first syn scan for all open ports and then individually fingerprint service of each port because fingerprinting may take time and I may want a list of open ports first before the tcpscan does its thing of further analyzing each port. 
+2. Sudo permission required to utilize librariesl like scapy and socket for packet creation, transmission, and receiver.
+3. I check for successful syn scans based on if response contained either 'A' ack flag or 'SA' synack flag
+4. I probe in the order 2-1-4-3-6-5 because TLS is more specific than TCP, but first 2 (TLS and TCP banners) are most specific, then the HTTPS and HTTP servers, and then finally the generic cases.
+
+UPDATE: I changed the probe order to 2-4-6-1-3-5 because it better fit with error handling. I sure do hope it works now. 
+
+
+Below, there are sample runs. I provided several, especially the ones from homework document. But, I also tested a little with other domains including self hosting http server or python https server using socket. The server on localhost port 8080 was http server, whereas the localhost port 8443 was https server using python script and socket + ssl. For generic, I also did the same thing. I created test scripts to send random data upon connection for generic TCP and generic TLS. For generic TCP, I jsut created a python script that sends random data in bytes after TCP handshake, likewise for TLS (which contains TLS layer). 
+
+
+Sample Runs:
+
+1. TCP Server-initiated
+
+└─$ sudo python tcpscan.py -p 21 44.241.66.173   
+
+Target: 44.241.66.173
+Scanning Ports:  [21]
+Open Ports:  [21]
+
+Scanning Ports now ...
+-----------------------------------------
+
+Host: 44.241.66.173:21
+[SSL: WRONG_VERSION_NUMBER] wrong version number (_ssl.c:1000)
+Type: (1) TCP server-initiated
+Response:  220 Welcome to the DLP Test FTP Server..
+
+
+└─$ sudo python tcpscan.py -p 25 142.251.167.108 
+Target: 142.251.167.108
+Scanning Ports:  [25]
+Open Ports:  [25]
+
+Scanning Ports now ...
+-----------------------------------------
+
+Host: 142.251.167.108:25
+[SSL: WRONG_VERSION_NUMBER] wrong version number (_ssl.c:1000)
+Type: (1) TCP server-initiated
+Response:  220 smtp.gmail.com ESMTP 6a1803df08f44-6eec9797b3asm35593986d6.100 - gsmtp..
+
+
+└─$ sudo python tcpscan.py -p 130 130.245.1.144  
+Target: 130.245.1.144
+Scanning Ports:  [130]
+Open Ports:  [130]
+
+Scanning Ports now ...
+-----------------------------------------
+
+Host: 130.245.1.144:130
+Type: (1) TCP server-initiated
+Response:  SSH-2.0-OpenSSH_7.4..
+                                  
+
+
+
+2. TLS Server-initiated
+
+└─$ sudo python tcpscan.py -p 465 142.251.167.108
+Target: 142.251.167.108
+Scanning Ports:  [465]
+Open Ports:  [465]
+
+Scanning Ports now ...
+-----------------------------------------
+
+Host: 142.251.167.108:465
+Type: (2) TLS server-initiated
+Response:  220 smtp.gmail.com ESMTP 6a1803df08f44-6eec9659a0fsm35757716d6.50 - gsmtp..
+
+
+
+└─$ sudo python tcpscan.py -p 993 142.251.111.108
+Target: 142.251.111.108
+Scanning Ports:  [993]
+Open Ports:  [993]
+
+Scanning Ports now ...
+-----------------------------------------
+
+Host: 142.251.111.108:993
+Type: (2) TLS server-initiated
+Response:  * OK Gimap ready for requests from 47.18.33.13 a12mb39931931qtx..
+
+
+
+
+3. HTTP Server
+
+└─$ sudo python tcpscan.py -p 80 23.185.0.4
+Target: 23.185.0.4
+Scanning Ports:  [80]
+Open Ports:  [80]
+
+Scanning Ports now ...
+-----------------------------------------
+
+Host: 23.185.0.4:80
+Type: (3) HTTP server
+Response:  HTTP/1.1 404 Unknown site..Connection: close..Content-Length: 566..Retry-After: 0..Server: Pantheon..Cache-Control: no-cache, must-revalidate..Content-Type: text/html; charset=utf-8..X-pantheon-serious-reason: The page could not be loaded properly...Date: Sun, 30 Mar 2025 17:15:40 GMT..X-Served-By: cache-ewr-kewr1740097-EWR..X-Cache: MISS..X-Cache-Hits: 0..X-Timer: S1743354940.037188,VS0,VE36..Vary: Cookie..Age: 0..Accept-Ranges: bytes..Via: 1.1 varnish....
+
+
+
+└─$ sudo python tcpscan.py -p 80 142.251.40.110
+Target: 142.251.40.110
+Scanning Ports:  [80]
+Open Ports:  [80]
+
+Scanning Ports now ...
+-----------------------------------------
+
+Host: 142.251.40.110:80
+Type: (3) HTTP server
+Response:  HTTP/1.0 200 OK..Date: Sun, 30 Mar 2025 17:17:00 GMT..Expires: -1..Cache-Control: private, max-age=0..Content-Type: text/html; charset=ISO-8859-1..Content-Security-Policy-Report-Only: object-src 'none';base-uri 'self';script-src 'nonce-c0ayRb-0KIyM9UxyMbCkHQ' 'strict-dynamic' 'report-sample' 'unsafe-eval' 'unsafe-inline' https: http:;report-uri https://csp.withgoogle.com/csp/gws/other-hp..P3P: CP="This is not a P3P policy! See g.co/p3phelp for more info."..Server: gws..X-XSS-Protection: 0..X-Frame-Options: SAMEORIGIN..Set-Cookie: AEC=AVcja2fFczOmdBRI62zbnsBYo408Zw9Cm2bnAFUv06i_go3OIQT-l6wwaQ; expires=Fri, 26-Sep-2025 17:17:00 GMT; path=/; domain=.google.com; Secure; HttpOnly; SameSite=lax..Set-Cookie: NID=522=RYeCfG-8M-zXZglMbf_eWrevobBqhcoQ0UK9SccGEQkUGS_0ZIgQwPw1Da9097lEs673-3v-6T24wlu9xbQ_b1KwV2i3XJgDiru9PXw047nRX0N49ZxvnClt7WgL_UpPZKUCdNzEWVSHGwaIhfS_Tsr3fSO9JznNJQ0TZqlgojPacgf9Z2rHGg9c4eqjCV-mXPfiao5ZqnJDmfvmK6o9oAAm; expires=Mon, 29-Sep-2025 17:17:00 GMT; path=/; domain=.google.com; HttpOnly..Accept-Ran
+
+
+
+└─$ sudo python tcpscan.py -p 8080 127.0.0.1   
+Target: 127.0.0.1
+Scanning Ports:  [8080]
+Open Ports:  [8080]
+
+Scanning Ports now ...
+-----------------------------------------
+
+Host: 127.0.0.1:8080
+Type: (3) HTTP server
+Response:  HTTP/1.0 200 OK..Server: SimpleHTTP/0.6 Python/3.12.7..Date: Sun, 30 Mar 2025 17:18:45 GMT..Content-type: text/html; charset=utf-8..Content-Length: 492....<!DOCTYPE HTML>.<html lang="en">.<head>.<meta charset="utf-8">.<title>Directory listing for /</title>.</head>.<body>.<h1>Directory listing for /</h1>.<hr>.<ul>.<li><a href="104.76.106.106_80">104.76.106.106_80</a></li>.<li><a href="hw1.txt">hw1.txt</a></li>.<li><a href="hw_2/">hw_2/</a></li>.<li><a href="server.crt">server.crt</a></li>.<li><a href="server.key">server.key</a></li>.<li><a href="server.py">server.py</a></li>.<li><a href="test.py">test.py</a></li>.</ul>.<hr>.</body>.</html>.
+
+
+
+4. HTTPS Server
+
+└─$ sudo python tcpscan.py -p 443 142.251.40.110 
+Target: 142.251.40.110
+Scanning Ports:  [443]
+Open Ports:  [443]
+
+Scanning Ports now ...
+-----------------------------------------
+
+Host: 142.251.40.110:443
+Type: (4) HTTPS server
+Response:  HTTP/1.0 200 OK..Date: Sun, 30 Mar 2025 17:16:17 GMT..Expires: -1..Cache-Control: private, max-age=0..Content-Type: text/html; charset=ISO-8859-1..Content-Security-Policy-Report-Only: object-src 'none';base-uri 'self';script-src 'nonce-a_MEerQm2S3pm8Wu9zYskQ' 'strict-dynamic' 'report-sample' 'unsafe-eval' 'unsafe-inline' https: http:;report-uri https://csp.withgoogle.com/csp/gws/other-hp..Accept-CH: Sec-CH-Prefers-Color-Scheme..P3P: CP="This is not a P3P policy! See g.co/p3phelp for more info."..Server: gws..X-XSS-Protection: 0..X-Frame-Options: SAMEORIGIN..Set-Cookie: AEC=AVcja2dR1nxCJHmB7zQO7Rx1HUUHqFvntNUH9T8fAVp5ohTh2qdCltZVB8g; expires=Fri, 26-Sep-2025 17:16:17 GMT; path=/; domain=.google.com; Secure; HttpOnly; SameSite=lax..Set-Cookie: NID=522=clntDMfJyGp_ovsuTW2m4NQ9JKos09j6lXw_WT-9psXK7fsjWUGCIdiy9h8D49K8pLBqQEjCEtsxyvMHOnbbaNtsJbMLgX8ErprNrXKYdIvzCq4vg9EmfTWdjuYlRRXhTKGd3JeEU_OwLc2oacqFKNKwG7Y6AT3VkXlUtRPhbs9BjITZUy_gTVDtDXksAhGHbfALpHapMquYYKrpusgv0Zo; expires=Mon, 29-Sep-2025 17:16:17 GMT; path=/; 
+
+
+
+└─$ sudo python tcpscan.py -p 8443 127.0.0.1
+Target: 127.0.0.1
+Scanning Ports:  [8443]
+Open Ports:  [8443]
+
+Scanning Ports now ...
+-----------------------------------------
+
+Host: 127.0.0.1:8443
+Type: (4) HTTPS server
+Response:  HTTP/1.0 200 OK..Server: SimpleHTTP/0.6 Python/3.12.7..Date: Sun, 30 Mar 2025 17:19:38 GMT..Content-type: text/html; charset=utf-8..Content-Length: 492....
+
+
+
+
+5. Generic TCP Server
+
+└─$ sudo python tcpscan.py -p 8081 127.0.0.1
+Target: 127.0.0.1
+Scanning Ports:  [8081]
+Open Ports:  [8081]
+
+Scanning Ports now ...
+-----------------------------------------
+
+Host: 127.0.0.1:8081
+Type: (5) Generic TCP server
+Response:  This is a generic response.
+
+
+
+6. Generic TLS Server
+
+└─$ sudo python tcpscan.py -p 8081 127.0.0.1
+Target: 127.0.0.1
+Scanning Ports:  [8081]
+Open Ports:  [8081]
+
+Scanning Ports now ...
+-----------------------------------------
+
+Host: 127.0.0.1:8081
+Type: (6) Generic TLS server
+Response:  This is a generic TLS Response.
+
+

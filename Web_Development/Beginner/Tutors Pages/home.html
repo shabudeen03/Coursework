@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+  <style>
+    /* Resetting default styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    /* Styling navigation */
+    nav {
+      background-color: #333;
+      padding: 10px;
+      text-align: center;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+    /* Styling main section */
+    .main-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 50px;
+    }
+    .main-section img {
+      width: 200px;
+      margin-bottom: 20px;
+    }
+    .options {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .options a {
+      text-decoration: none;
+      color: #333;
+      background-color: #f0f0f0;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-weight: bold;
+      text-transform: uppercase;
+      transition: background-color 0.3s ease;
+    }
+    .options a:hover {
+      background-color: #ddd;
+    }
+    /* Styling footer */
+    footer {
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="#">Our Mission</a>
+    <a href="#">Testimonies</a>
+    <a href="#">Schools</a>
+    <a href="#">Courses</a>
+    <input type="text" placeholder="Search">
+    <a href="#">Become a Tutor</a>
+    <a href="#">Sign In</a>
+  </nav>
+
+  <div class="main-section">
+    <img src="student_image.jpg" alt="I am a student">
+    <div class="options">
+      <a href="#">I am a student</a>
+      <a href="#">I am a school administrator</a>
+      <a href="#">I am a tutor</a>
+    </div>
+    <p>Tutoring related fluff goes here...</p>
+  </div>
+
+  <footer>
+    <p>Contact us info, meet the team, etc.</p>
+  </footer>
+</body>
+</html>

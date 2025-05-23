@@ -1,0 +1,82 @@
+body
+{
+  background-image: url("L4 Images/logo.jpg");
+  background-repeat: no-repeat;
+  background-color: orange;
+  background-size: 350px;
+  background-position: right top;
+  background-attachment: fixed;
+}
+h1 span
+{
+  border: 1px solid lightyellow;
+  border-radius: 10px;
+  background-color: lightyellow;
+  padding: 5px;
+  box-shadow: 3px 3px 6px 3px black;
+  font: bold 50pt calibri;
+}
+.box
+{
+  font: 16pt calibri;
+  border: thick solid lightyellow;
+  border-radius: 10px;
+  width: 500px;
+  margin-left: 200px;
+  padding: 20px;
+  background-color: lightyellow;
+  box-shadow: 3px 5px 4px 5px black;
+  text-align: center;
+}
+input, button
+{
+  font: 14pt calibri;
+  border-radius: 5px;
+}
+#logform
+{
+  font-weight: bold;
+}
+.boxLEFT
+{
+  background-color: #ffd133; /*f1f1f1*/
+  border-radius: 10px;
+  width: 75%;
+  margin: 2.5px;
+  text-align: center;
+  line-height: 60px;
+  font-size: 14pt;
+  font-family: comic sans ms;
+  padding-left: 150px;
+}
+.flex-container
+{
+  opacity: 0.8;
+  display: flex;
+  flex-wrap: nowrap;
+  background-color: brown;
+  padding: 2px;
+  border-radius: 10px;
+}
+.boxRIGHT
+{
+  background-color: #f1f1f1;
+  border-radius: 10px;
+  width: 25%;
+  margin: 2.5px;
+  line-height: 60px;
+  font: 20px comic sans ms;
+  padding-left: 10px;
+  text-align: center;
+  padding: 10px;
+}
+#yourList
+{
+  text-decoration: underline;
+  font-weight: bold;
+}
+.store
+{
+  text-decoration: underline;
+  font-weight: bold;
+}

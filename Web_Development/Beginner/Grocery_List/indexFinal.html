@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Shop Lift Up, Inc.</title>
+    <link rel = "stylesheet" href = "styleFinal.css"; />
+    <script src = "utilitiesFinal.js"></script>
+  </head>
+  <body onload = "initialize();">
+    <h1> <span>Grocery List</span> </h1>
+    <div class = "box">
+      <span id = "itemCheck"></span>
+      <form id = "formInput"> <textarea name="logInput" rows="1" cols="48"></textarea> </form> <br />
+      <button onclick = "updateList(formValue.logInput.value, '0');">Add Item</button>
+      <button onclick = "updateList(formValue.logInput.value, '1');">Delete Item</button>
+      <button onclick = "updateList(formValue.logInput.value, '00');">Move Item Up</button>
+      <button onclick = "updateList(formValue.logInput.value, '11');">Move Item Down</button>
+    </div> <br />
+
+    <div class = "flex-container">
+      <div class = "boxLEFT"> <span class = "store"> Your List: </span> <br />
+        <div class = "boxRIGHT"> <span id = "yourList">  </span> <br /> <span id = "logform"></span> </div>
+      </div> </div>
+  </body>
+</html>

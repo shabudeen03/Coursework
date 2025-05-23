@@ -1,0 +1,78 @@
+Guhfran Shuhood
+ID: 114483164
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Imports:
+	from scapy.layers.http import HTTPRequest # import HTTP packet
+	from scapy.layers.tls.all import TLS # import TLS class for processing raw bytes
+	import cryptography # it was a hint, so just put it here
+	load_layer("tls") # load tls layer
+	load_layer("http") # load HTTP layer
+	import sys # for command line arguments
+	import os.path # to check for tracefile
+	import datetime # for timestamps
+
+	* I used initially python http.server for raw HTTP packets
+	* I used apache2 + self signed certs + sample raw bytes online for raw TLS Client Hello packets
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+i)
+	The program runs with command line arguments as specified. In case of invalid input or privileges lacking, an error statement is printed out. Everything starts from main()
+	
+	First, command line arguments are parsed using 'sys' via sys.argv --- parametrized for main(). 
+	Second, I do try/excepts for everything from sniffing to checking for filepath (if -r used)
+	Third, I process command line arguments into interface, tracefile, and expression variables as needed 
+	Fourth, I run sniff with offline=tracefile for '-r' option. Otherwise, I specify interface via iface=interface. For both branches, I call filter=expression, where expression is "" if not specified. Likewise, with other 2 variables (interface and tracefile). I also use store=0 option as I don't need to store it. 
+	
+	Fifth, I use packet Handler for each packet sniffed/processed. In the packet Handler, I get the timestamp from the packet using packet.time. Then, I use conditionals to check if packet has DNS layer, otherwise if it has HTTP request or TLSClientHello. Then accordingly, I process each type of packet. 
+	
+	Sixth, for DNS in packet, I check if it has a Resource Record (ignored) otherwise look for Question record and I call handler just for DNS packets to generate the expected outcome for the packet. I call handlers for HTTP packets and TLSClientHello packets. 
+	
+	Seventh, for each handler, I am processing the relevant details for the much needed timestamp. For the DNS packet handler, I have to decode with "utf-8" for the DNS Question Record as well as output for the DNS packet with assumption it is on UDP as stated on piazza. Likewise, for HTTP packets with the assumption they are on TCP and I use decode to retrieve Host, Method, and Path. ANd, for TLSClientHEllo packets, I retrieve with assumption they are on TCP (since it is using reliable delivery), and retrieve the SNI field using decode(). 
+	
+	Eigth, for all 3 types of packets, I respectively retrieve port and ip addresses for source and destination given the assumptions in previous bullet point (DNS on UDP, HTTP on TCP, and TLS on TCP)
+	
+	Ninth, it repeats for all packets sniffed or if they are in the tracefile. 
+	
+	After trying hard with python http.server, I resorted to enable apache2 for non-standard ports.
+	I modified /etc/apache2/sites-enabled/000-default.conf:
+		First line, change port in <VirtualHost *:80> to <VirtualHost *:9090>
+	
+	Then, I modified for TLSClientHello raw packets, 
+		I realized from online that it has a structure
+		Essentially first byte and 5th byte indicate handshake and client hello respectively
+		So, I used that with the fact that I can utilize TLS class on raw payload
+		From there, it was just like any other TLSClientHello packet.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+ii)
+Sample output for regular standard ports: 
+
+┌──(kali㉿kali)-[~/Documents/CSE_363/hw_1]
+└─$ sudo python capture.py -r capture.pcap tcp port 80
+reading from file capture.pcap, link-type EN10MB (Ethernet), snapshot length 262144
+2024-11-23 19:41:13.056395 HTTP 192.168.1.20:50018 --> 104.76.106.106:80 go.microsoft.com POST /fwlink/?LinkID=252669&clcid=0x409
+2024-11-23 19:41:13.076392 HTTP 192.168.1.20:50019 --> 104.76.106.106:80 go.microsoft.com POST /fwlink/?LinkID=252669&clcid=0x409
+2024-11-23 19:41:13.094423 HTTP 192.168.1.20:50020 --> 104.76.106.106:80 go.microsoft.com POST /fwlink/?LinkID=252669&clcid=0x409
+2024-11-23 19:41:13.112516 HTTP 192.168.1.20:50021 --> 104.76.106.106:80 go.microsoft.com POST /fwlink/?LinkID=252669&clcid=0x409
+2024-11-23 19:41:13.132490 HTTP 192.168.1.20:50022 --> 104.76.106.106:80 go.microsoft.com POST /fwlink/?LinkID=252669&clcid=0x409
+2024-11-23 19:41:13.154504 HTTP 192.168.1.20:50023 --> 104.76.106.106:80 go.microsoft.com POST /fwlink/?LinkID=252669&clcid=0x409
+2024-11-23 19:41:13.218581 HTTP 192.168.1.20:50024 --> 104.76.106.106:80 go.microsoft.com POST /fwlink/?LinkID=252669&clcid=0x409
+2024-11-23 19:41:16.037443 HTTP 192.168.1.20:50030 --> 192.168.1.72:80 192.168.1.72 POST /WebServices/Device
+2024-11-23 19:41:17.604977 HTTP 192.168.1.20:50034 --> 104.76.106.106:80 go.microsoft.com POST /fwlink/?LinkID=252669&clcid=0x409
+2024-11-23 19:41:35.953191 HTTP 192.168.1.20:50047 --> 23.221.42.17:80 r11.o.lencr.org POST /
+2024-11-23 19:41:56.715654 HTTP 192.168.1.20:50069 --> 23.221.43.89:80 www.msftconnecttest.com GET /connecttest.txt
+2024-11-23 19:41:57.234379 HTTP 192.168.1.20:50077 --> 34.107.221.82:80 detectportal.firefox.com GET /success.txt?ipv4
+2024-11-23 19:41:57.234519 HTTP 192.168.1.20:50078 --> 34.107.221.82:80 detectportal.firefox.com GET /canonical.htmlould look like in raw unlike http which i know has a request line and host field. 
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Sample output from non-standard port:
+2025-03-01 17:05:58.191764 HTTP 127.0.0.1:51236 --> 127.0.0.1:9090 localhost:9090 GET /
+2025-03-01 17:05:58.191765 HTTP 127.0.0.1:51236 --> 127.0.0.1:9090 localhost:9090 GET /
+2025-03-01 22:08:08.071220 TLS 192.168.1.2:87 --> 237.45.1.34:9090 example.ulfheim.net
+                                   

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+	<!--
+	Name: Guhfran Shuhood
+	Seat: 28
+-->
+	<html>
+		<head>
+			<title>Calorie Counter</title>
+			<style>
+		  	body
+		  	{
+					margin-top: 50px;
+					text-align: center;
+					font: 14pt comic sans ms;
+					background-color: lightyellow;
+		  	}
+				div
+				{
+					border: thin solid black;
+					width: 31%;
+					display: inline-block;
+					text-align: center;
+				}
+				button
+				{
+					background-color: yellow;
+					font: 12pt calibri;
+				}
+			</style>
+			<script>
+				function initialize()
+				{
+					appetizer1 = document.getElementById("app1");
+					appetizer2 = document.getElementById("app2");
+					appetizer3 = document.getElementById("app3");
+					apptotal = document.getElementById("appt");
+					entree1 = document.getElementById("ent1");
+					entree2 = document.getElementById("ent2");
+					entree3 = document.getElementById("ent3");
+					enttotal = document.getElementById("entt");
+					dessert1 = document.getElementById("des1");
+					dessert2 = document.getElementById("des2");
+					dessert3 = document.getElementById("des3");
+					destotal = document.getElementById("dest");
+					total = document.getElementById("sum");
+					carb1 = 0; prot1 = 0; fat1 = 0;
+					carb2 = 0; prot2 = 0; fat2 = 0;
+					carb3 = 0; prot3 = 0; fat3 = 0;
+					appsum = 0; entsum = 0; dessum = 0;
+					calories = 0;
+				}
+				function reset(reset)
+				{
+					if (reset == 1)
+					{
+						carb1 = 0; prot1 = 0; fat1 = 0;	appsum = 0;
+						calories = entsum + dessum;
+					}
+					if (reset == 2)
+					{
+						carb2 = 0; prot2 = 0;	fat2 = 0;	entsum = 0;
+						calories = appsum + dessum;
+					}
+					if (reset == 3)
+					{
+						carb3 = 0; prot3 = 0;	fat3 = 0;	dessum = 0;
+						calories = appsum + entsum;
+					}
+					initialize();
+					display();
+				}
+				function procedure(food, nutrient, operation)
+				{
+					if (food == 1)
+					{
+						if (nutrient == 1)
+						{
+							if (operation == 1)	carb1 ++;
+							if (operation == 3)	carb1 += 5;
+							if (operation == 0)	if (carb1 > 0) carb1 --;
+							if (operation == 2)	if (carb1 > 4) carb1 -= 5;
+						}
+						if (nutrient == 2)
+						{
+							if (operation == 1)	prot1 ++;
+							if (operation == 3) prot1 += 5;
+							if (operation == 0)	if (prot1 > 0) prot1 --;
+							if (operation == 2)	if (prot1 > 4) prot1 -= 5;
+						}
+						if (nutrient == 3)
+						{
+							if (operation == 1)	fat1 ++;
+							if (operation == 3)	fat1 += 5;
+							if (operation == 0)	if (fat1 > 0)	fat1 --;
+							if (operation == 2)	if (fat1 > 4)	fat1 -= 5;
+						}
+						appsum = (carb1 * 4) + (prot1 * 4) + (fat1 * 9);
+						calories = appsum + entsum + dessum;
+				}
+				if (food == 2)
+					{
+						if (nutrient == 1)
+						{
+							if (operation == 1)	carb2 ++;
+							if (operation == 3)	carb2 += 5;
+							if (operation == 0)	if (carb2 > 0)	carb2 --;
+							if (operation == 2)	if (carb2 > 4)	carb2 -= 5;
+						}
+						if (nutrient == 2)
+						{
+							if (operation == 1)	prot2 ++;
+							if (operation == 3)	prot2 += 5;
+							if (operation == 0)	if (prot2 > 0)	prot2 --;
+							if (operation == 2)	if (prot2 > 4)	prot2 -= 5;
+						}
+						if (nutrient == 3)
+						{
+							if (operation == 1)	fat2 ++;
+							if (operation == 3)	fat2 += 5;
+							if (operation == 0)	if (fat2 > 0)	fat2 --;
+							if (operation == 2)	if (fat2 > 4)	fat2 -= 5;
+						}
+						entsum = (carb2 * 4) + (prot2 * 4) + (fat2 * 9);
+						calories = appsum + entsum + dessum;
+					}
+					if (food == 3)
+					{
+						if (nutrient == 1)
+						{
+							if (operation == 1)	carb3 ++;
+							if (operation == 3)	carb3 += 5;
+							if (operation == 0)	if (carb3 > 0)	carb3 --;
+							if (operation == 2)	if (carb3 > 4)	carb3 -= 5;
+						}
+						if (nutrient == 2)
+						{
+							if (operation == 1)	prot3 ++;
+							if (operation == 3)	prot3 += 5;
+							if (operation == 0)	if (prot3 > 0)	prot3 --;
+							if (operation == 2)	if (prot3 > 4)	prot3 -= 5;
+						}
+						if (nutrient == 3)
+						{
+							if (operation == 1)	fat3 ++;
+							if (operation == 3)	fat3 += 5;
+							if (operation == 0)	if (fat3 > 0)	fat3 --;
+							if (operation == 2)	if (fat3 > 4)	fat3 -= 5;
+						}
+						dessum = (carb3 * 4) + (prot3 * 4) + (fat3 * 9);
+						calories = appsum + entsum + dessum;
+					}
+					display();
+				}
+				function display()
+				{
+					appetizer1.innerHTML = carb1;
+					appetizer2.innerHTML = prot1;
+					appetizer3.innerHTML = fat1;
+					apptotal.innerHTML = appsum;
+					entree1.innerHTML = carb2;
+					entree2.innerHTML = prot2;
+					entree3.innerHTML = fat2;
+					enttotal.innerHTML = entsum;
+					dessert1.innerHTML = carb3;
+					dessert2.innerHTML = prot3;
+					dessert3.innerHTML = fat3;
+					destotal.innerHTML = dessum;
+					total.innerHTML = calories;
+				}
+			</script>
+		</head>
+		<body onload = "initialize();">
+			<div id = "food1">
+			<h3> Appetizer </h3>
+				Carbohydrates: <span id = "app1"> 0 </span> grams <br />
+				<button onclick = "procedure(1, 1, 1);"> Add 1 gram </button>
+				<button onclick = "procedure(1, 1, 3);"> Add 5 grams </button>
+				<button onclick = "procedure(1, 1, 0);"> Subtract 1 gram </button>
+				<button onclick = "procedure(1, 1, 2);"> Subtract 5 grams </button> <br />
+				Proteins: <span id = "app2"> 0 </span> grams <br />
+				<button onclick = "procedure(1, 2, 1);"> Add 1 gram </button>
+				<button onclick = "procedure(1, 2, 3);"> Add 5 grams </button>
+				<button onclick = "procedure(1, 2, 0);"> Subtract 1 gram </button>
+				<button onclick = "procedure(1, 2, 2);"> Subtract 5 grams </button> <br />
+				Fats: <span id = "app3"> 0 </span> grams <br />
+				<button onclick = "procedure(1, 3, 1);"> Add 1 gram </button>
+				<button onclick = "procedure(1, 3, 3);"> Add 5 grams </button>
+				<button onclick = "procedure(1, 3, 0);"> Subtract 1 gram </button>
+				<button onclick = "procedure(1, 3, 2);"> Subtract 1 gram </button>
+				<h4> Appetizer Total Calories: <span id = "appt"> 0 </span> calories </h4>
+				<button onclick = "reset(1);"> Reset Appetizer </button>
+			</div>
+
+			<div id = "food2">
+			<h3> Entree </h3>
+				Carbohydrates: <span id = "ent1"> 0 </span> grams <br />
+				<button onclick = "procedure(2, 1, 1);"> Add 1 gram </button>
+				<button onclick = "procedure(2, 1, 3);"> Add 5 grams </button>
+				<button onclick = "procedure(2, 1, 0);"> Subtract 1 gram </button>
+				<button onclick = "procedure(2, 1, 2);"> Subtract 5 grams </button>  <br />
+				Proteins: <span id = "ent2"> 0 </span> grams <br />
+				<button onclick = "procedure(2, 2, 1);"> Add 1 gram </button>
+				<button onclick = "procedure(2, 2, 3);"> Add 5 grams </button>
+				<button onclick = "procedure(2, 2, 0);"> Subtract 1 gram </button>
+				<button onclick = "procedure(2, 2, 2);"> Subtract 5 grams </button>  <br />
+				Fats: <span id = "ent3"> 0 </span> grams <br />
+				<button onclick = "procedure(2, 3, 1);"> Add 1 gram </button>
+				<button onclick = "procedure(2, 3, 3);"> Add 5 grams </button>
+				<button onclick = "procedure(2, 3, 0);"> Subtract 1 gram </button>
+				<button onclick = "procedure(2, 3, 2);"> Subtract 5 grams </button>
+				<h4> Entree Total Calories: <span id = "entt"> 0 </span> calories </h4>
+				<button onclick = "reset(2);"> Reset Entree </button>
+			</div>
+
+			<div id = "food3">
+			<h3> Dessert </h3>
+				Carbohydrates: <span id = "des1"> 0 </span> grams <br />
+				<button onclick = "procedure(3, 1, 1);"> Add 1 gram </button>
+				<button onclick = "procedure(3, 1, 3);"> Add 5 grams </button>
+				<button onclick = "procedure(3, 1, 0);"> Subtract 1 gram </button>
+				<button onclick = "procedure(3, 1, 2);"> Subtract 5 grams </button> <br />
+				Proteins: <span id = "des2"> 0 </span> grams <br />
+				<button onclick = "procedure(3, 2, 1);"> Add 1 gram </button>
+				<button onclick = "procedure(3, 2, 3);"> Add 5 grams </button>
+				<button onclick = "procedure(3, 2, 0);"> Subtract 1 gram </button>
+				<button onclick = "procedure(3, 2, 2);"> Subtract 5 grams </button> <br />
+				Fats: <span id = "des3"> 0 </span> grams <br />
+				<button onclick = "procedure(3, 3, 1);"> Add 1 gram </button>
+				<button onclick = "procedure(3, 3, 3);"> Add 5 grams </button>
+				<button onclick = "procedure(3, 3, 0);"> Subtract 1 gram </button>
+				<button onclick = "procedure(3, 3, 2);"> Subtract 5 grams </button>
+				<h4> Dessert Total Calories: <span id = "dest"> 0 </span> calories </h4>
+				<button onclick = "reset(3);"> Reset Dessert </button>
+			</div>
+
+				<h3> Total Calories: <span id="sum"> 0 </span> calories </h3>
+				<button onclick = "reset(4);"> Reset The Whole Meal </button>
+		</body>
+	</html>

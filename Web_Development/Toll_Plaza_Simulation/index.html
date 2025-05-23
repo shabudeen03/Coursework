@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Toll Plazza</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="design.css"/>
+    <script src = "data.js"></script>
+  </head>
+  <body onload = "initialize();">
+    <h2> Welcome to the Toll Plaza Simulation! </h2>
+     
+    <h3> If you wish to learn about the simulation beforehand, click ---> <button id="openPopup" onclick="toggleInstructions();">Open Information About The Simulation</button> </h3>
+
+    <div id="infoPopup"> <!-- The inspiration behind this popup idea was from Steven's level 5 and 6 projects, both of which I peer reviewed -->
+      <div class="closeButton"><button onclick="toggleInstructions();" id="closePopup">Close Information About The Simulation</button></div>
+      <h3>Information About The Toll Plaza Simulation</h3>
+      <p> 
+        The simulation is 24 minutes long, where each minute is an hour and a second is a minute in the simulation. 
+        <br />
+        There are 4 types of vehicles: 
+          <ul> 
+            <li>Car</li>
+            <li>Truck</li>
+            <li>Motorcycle</li>
+            <li>Bus</li>
+          </ul>
+        The simulation updates the number of vehicles and the type of vehicles every second in real time, which is a mminute in the simulation.
+        <br />
+        Additionally, the number of each type of vehicles, the number of total vehicles a minute, and the type of each vehicle varies by simulation time. 
+          <ul> 
+            <li> 12am - 5am: 30% Cars, 65% Trucks, 5% Motorcycles, 0% Buses (2 - 10 vehicles per minute)</li>
+            <li> 5:01am - 9am: 50% Cars, 25% Trucks, 5% Motorcycles, 20% Buses (20 - 40 vehicles per minute)</li>
+            <li> 9:01am - 2pm: 40% Cars, 40% Trucks, 10% Motorcycles, 10% Buses (5 - 20 vehicles per minute)</li>
+            <li> 2:01pm - 4pm: 45% Cars, 30% Trucks, 10% Motorcycles, 15% Buses (10 - 30 vehicles per minute)</li>
+            <li> 4:01pm - 6pm: 60% Cars, 15% Trucks, 5% Motorcycles, 20% Buses (20 - 40 vehicles per minute)</li>
+            <li> 6:01pm - 8pm: 60% Cars, 25% Trucks, 5% Motorcycles, 10% Buses (10 - 30 vehicles per minute)</li>
+            <li> 8:01pm - 11:59pm: 50% Cars, 40% Trucks, 5% Motorcycles, 50% Buses (5 - 15 vehicles per minute)</li>
+          </ul>
+        Next, the value of the toll, chance of having an EZ-Pass or being residential depends on each type of vehicle. 
+        <br />
+        If a vehicle does not have an EZ-Pass, then it is automatically not a residential vehicle. 
+          <ul> 
+            <li> A car or a motorcycle will have an EZ-Pass 70% of the time and gets a residential discount 60% of the time. The toll is $12.</li>
+            <li> A Truck will have an EZ-Pass 90% of the time. The toll is $18.</li>
+            <li> A bus will always have an EZ-Pass. The toll is $0.</li>
+          </ul>
+        Lastly, the summary table breakdown:
+          <ul> 
+            <li> How many of each type of vehicle passed through the plaza</li>
+            <li> How many of each type of vehicle had an EZ-Pass</li>
+            <li> How many of each type of vehicle was residential</li>
+            <li> The total money collected via EZ-Pass</li>
+            <li> The total money collected via pay by plate</li>
+            <li> The percentages of all the totals</li>
+          </ul>
+        </p>
+    </div>
+      
+      <hr />
+
+    <img src="logo.png" class="imgLogo"/>
+    <img src="cover.png" class="coverImage"/>
+
+    <div class="simSpeeds">
+      <span class="spdText">Speeds:</span> 
+
+      <button onclick="setSpeed(4);">0.25x</button>
+      <button onclick="setSpeed(2);">0.5x</button>
+      <button onclick="setSpeed(1);">Normal</button>
+      <button onclick="setSpeed(0.5);">2x</button>
+      <button onclick="setSpeed(0.25);">4x</button>  
+    </div>
+    
+    <div class="simButtons"> <br />
+      <button onclick="startCounter(true);">Start Simulation</button> 
+      <button onclick="stopCounter('');">Pause Simulation</button> 
+      <button onclick="stopCounter('stop');">Reset Simulation</button>
+    </div> <hr />
+
+  	<div id="countId"></div>
+
+    <table id="data">
+          <tr> <th class="oneLine"> Total Money Collected via EZ-Pass</th>
+               <th> $ <span id="totalEzPass">0</span> </th> </tr>
+
+          <tr> <th class="oneLine"> Total Money Collected via Pay by Plate</th>
+               <th> $ <span id="totalPlate">0</span> </th> </tr>
+
+          <tr> <th class="oneLine"> Percentage of Money collected through EZ-Pass</th>
+               <th> <span id="percentEZ">0</span> % </th> </tr>
+
+          <tr> <th class="oneLine"> Percentage of Money collected through Pay by Plates</th>
+               <th> <span id="percentPlate">0</span> % </th> </tr>
+
+          <tr> <th class="labels"> Vehicles</th>
+               <th class="labels"> Car</th>
+               <th class="labels"> Truck</th>
+               <th class="labels"> Motorcycle</th>
+               <th class="labels"> Bus</th> </tr>
+
+          <tr> <th> Count of Each Type </th>
+               <th><span id="0">0</span></th>
+               <th><span id="1">0</span></th>
+               <th><span id="2">0</span></th>
+               <th><span id="3">0</span></th> </tr>
+
+          <tr> <th> Count w/ EZ-Pass </th>
+               <th><span id="4">0</span></th>
+               <th><span id="5">0</span></th>
+               <th><span id="6">0</span></th>
+               <th><span id="7">0</span></th> </tr>
+
+          <tr> <th> Count w/ Residential </th>
+               <th><span id="8">0</span></th>
+               <th><span id="9">0</span></th>
+               <th><span id="10">0</span></th>
+               <th><span id="11">0</span></th> </tr>
+       </table> 
+       <hr />
+
+       <div class="tolls"><span class="logs">Log:</span></div>
+       <div class="tolls"><div class="table" id="logOutput"></div></div>
+  </body>
+</html>

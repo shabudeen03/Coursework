@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Meet with Chat</title>
+</head>
+<body>
+    <h1>Google Meet with Chat</h1>
+
+    <div style="display: flex;">
+        <!-- Embedded Google Meet -->
+        <iframe src="https://meet.google.com/your-meet-id" frameborder="0" style="flex: 1; height: 500px;"></iframe>
+
+        <!-- Chat Interface -->
+        <div style="flex: 1; padding-left: 20px;">
+            <h2>Chat</h2>
+            <div id="chat-messages" style="height: 400px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;"></div>
+            <input type="text" id="chat-input" placeholder="Type your message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        // Function to send message
+        function sendMessage() {
+            var messageInput = document.getElementById('chat-input');
+            var message = messageInput.value;
+            messageInput.value = '';
+
+            var chatMessages = document.getElementById('chat-messages');
+            var messageElement = document.createElement('div');
+            messageElement.textContent = message;
+            chatMessages.appendChild(messageElement);
+        }
+    </script>
+</body>
+</html>
